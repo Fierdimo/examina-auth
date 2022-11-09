@@ -11,7 +11,7 @@ const app = express();
 app.use(cors())
 
 // mongoose.connect('mongodb://localhost:27017/test')
-mongoose.connect(process.env.MONGODB_ACCESS, { dbName: 'authservice' })
+mongoose.connect(process.env.MONGODB_ACCESS, { useNewUrlParser: true, dbName: 'authservice' })
     .then(console.log(`Data base connected ${mongoose.connection.readyState}`))
     .catch(error => console.log(error))
 mongoose.Promise = global.Promise

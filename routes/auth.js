@@ -16,5 +16,16 @@ router.post('/', async function(req, res, next){
   const response = await userController.postUser(data)
   res.status(200).json(response)
 })
+router.post('/', async function(req, res){
+  const data = req.body
+  const userdata = await userController.postUser(data)
+  res.status(200).json(userdata)
+})
+
+router.put('/', async function(req, res){
+  const data = req.body
+  const userdata = await userController.getUser(data)
+  res.status(200).json(userdata)
+})
 
 module.exports = router;

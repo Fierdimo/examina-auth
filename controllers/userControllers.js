@@ -18,8 +18,19 @@ async function listUsers() {
 
 async function postUser(data){
     const the_user = new userModel(data);
-    the_user.save();
-    return "saved!"
+    try{
+        the_user.save();
+        return  the_user
+    }catch(e){
+        console.log(e)
+        return "error!!"
+    }
+    
+   
+}
+async function getUser(data){
+    const the_user = new userModel(data);
+    return the_user
 }
 
-module.exports = { listUsers, postUser }
+module.exports = { listUsers, postUser, getUser }
