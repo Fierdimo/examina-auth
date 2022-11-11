@@ -1,45 +1,55 @@
 const express = require('express');
 const router = express.Router();
 
-
 const userController = require('../controllers/userControllers')
 
-/* GET users listing. */
-router.get('/auth', async function(req, res) {
-  const response = await userController.listUsers();
 
-  if(response.error) res.status(400).json(response.error_message);
-  else res.status(200).json(response);
+// GET users listing
+router.get('/list', async function (req, res, next) {
+  req.response = await userController.listUsers();
+  next();
 });
 
-router.post('/auth', async function(req, res){
-  const data = req.body;
-  const response = await userController.postUser(data)
-  
-  res.status(200).json(response)
-})
+// GET user by ID
+router.get('/show/:id', async function (req, res, next) {
+  req.response = await userController.getUser(req.params.id)
+  next();
+});
 
-router.post('/update', async function(req, res){
-  const id = req.body.id
-  delete req.body.id
-  const data = req.body;
-  
-  const response = await userController.updateUser(id, data)
-  
-  res.status(200).json(response)
-})
+//create new user
+router.post('/create', async function (req, res, next) {
+  req.response = await userController.postUser(req.body)
+  next();
+});
 
-router.get('/validatepassword', async function(req, res, next){
+//Update user's data except password
+router.post('/update', async function (req, res, next) {
+  delete req.body.password;
+  const data = req.body;
+  req.response = await userController.updateUser(data);
+  next();
+});
+
+//validate password
+router.get('/validatepassword', async function (req, res, next) {
   const data = req.body
   req.response = await userController.validatePassword(data)
   next()
-})
+});
 
-
-router.put('/', async function(req, res){
+//update password
+router.post('/changepassword', async function (req, res, next) {
   const data = req.body
-  const userdata = await userController.getUser(data)
-  res.status(200).json(userdata)
-})
+  req.response = await userController.changePassword(data)
+  next()
+});
+
+//delete user by id
+router.delete('/:id', async function (req, res, next) {
+  req.response = await userController.deleteUser(req.params.id);
+  console.log(req.response)
+  next();
+});
+
 
 module.exports = router;

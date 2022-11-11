@@ -24,6 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //microservice routes
-app.use('/users', usersRouter, manageResponse);
+app.use('/user', usersRouter, manageResponse);
 
 module.exports = app;
