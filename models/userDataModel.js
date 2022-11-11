@@ -13,13 +13,15 @@ const UserSchema = new mongoose.Schema({
         trim:true,
         minlength:[8,'password too short']
     },
-    name: {
+    name_of_user: {
         type: String,
-        trim:true
+        trim:true,
+        minlength: [3, 'too short name'],
     },
-    lastname: {
+    familyname: {
         type: String,
-        trim:true
+        trim:true,
+        minlength: [3, 'too short lastname'],
     },
     email: {
         type: String,
@@ -36,4 +38,4 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('users', UserSchema)
+module.exports = mongoose.model('userDataModel', UserSchema)
