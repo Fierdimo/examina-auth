@@ -5,34 +5,50 @@ const userDataModel = require('../models/userDataModel')
 //list all users
 async function listUsers() {
     try {
-        const list_of_users = await userDataModel.find()
-        return list_of_users;
+        const response = await userDataModel.find()
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
 //show user by id
 async function getUser(id) {
-    const user = new userDataModel()
     try {
-        const the_user = await user.getUser(id)
-        return the_user
-    }catch (e){
-        return e
+        const response = await userDataModel.findById(id)
+        return {
+            error: false,
+            data: response
+        };
+    } catch (e) {
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
 //create a user
 async function postUser(data) {
-    const the_user = new userDataModel(data);
+    const response = new userDataModel(data);
     try {
-        // console.log(await the_user.isValidAction(the_user.email))
-        await the_user.save();
-        console.log(`created new user <${the_user.email}> at ${the_user.createdAt}`)
-        return the_user
+        await response.save();
+        console.log(`created new user <${response.email}> at ${response.createdAt}`)
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
@@ -41,9 +57,15 @@ async function updateUser(data) {
     try {
         const response = await userDataModel.findByIdAndUpdate(data.id, data, { new: true, runValidators: true });
         console.log(`updated user <${response.email}> at ${response.updatedAt}`)
-        return response
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
@@ -52,10 +74,16 @@ async function validatePassword(data) {
     const user = new userDataModel(data)
     try {
         const valid = await user.isValidPassword(data)
-        if (valid) return "contraseña valida"
-        return "contraseña invalida"
+        if (valid) return true
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
@@ -63,10 +91,16 @@ async function validatePassword(data) {
 async function changePassword(data) {
     const user = new userDataModel(data)
     try {
-        const valid = await user.updatePassword(data)
-        return valid
+        const response = await user.updatePassword(data)
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 };
 
@@ -75,10 +109,15 @@ async function deleteUser(id) {
     try {
         console.log('trying to delete user ' + id)
         const response = await userDataModel.findByIdAndDelete(id)
-        return response
+        return {
+            error: false,
+            data: response
+        };
     } catch (e) {
-        console.log('==================== ERROR! ================================')
-        return e
+        return {
+            error: true,
+            data: e
+        };
     }
 }
 

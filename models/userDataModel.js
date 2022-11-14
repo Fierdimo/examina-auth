@@ -40,9 +40,8 @@ async function hashPassword(password) {
     return await bcrypt.hash(password, salt);
 }
 
-// encrypt password before save document on creation
+// encrypt password before <SAVE> document
 UserSchema.pre('save', async function (next) {
-    console.log('encript password')
     this.password = await hashPassword(this.password);
     next();
 })
@@ -55,35 +54,33 @@ UserSchema.method('isValidPassword', async function (data) {
         if (validPassword) return true
         return false
     } catch {
-        throw "error with pw"
+        throw "error with pw validation"
     }
 })
 
-UserSchema.method('updatePassword', async function(data){
+UserSchema.method('updatePassword', async function (data) {
     const newPasswordHash = await hashPassword(data.password);
-    try{
-        const response = await Users.findByIdAndUpdate(data.id, {password: newPasswordHash}, {new:true});
+    try {
+        const response = await Users.findByIdAndUpdate(data.id, { password: newPasswordHash }, { new: true });
         return response
-    }catch (e){
+    } catch (e) {
         return e
     }
 })
 
-UserSchema.method('getUser', async function(id){
-    try{
-        const response = await Users.findById(id);
-        return response
-    }catch (e){
-        return e
-    }
-})
+// UserSchema.method('isValidAction', async function (id, action) {
+//     const my = await Users.findById(id)
+//     const permissions = await ***permissionModel.forThisAction(action)***
 
-// UserSchema.method('isValidAction', async function (user, action) {
-//     const me = await Users.find({ email: user })
-//     const permissions = await permissionModel.forThisAction(action)
-//     if (permissions.includes(me.roles)) return true;
+// ***** action examples *****
+// **** read : [USER, ADMIN, GUEST],
+// **** write: [ADMIN]
+// **** write_self: [USER]
+// **** delete: [ADMIN]
+// **** delete_self: [USER]
+
+//     if (permissions.includes(my.rol)) return true;
 //     return false
-//     return me
 // })
 
 const Users = mongoose.model('user', UserSchema)

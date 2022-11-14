@@ -5,8 +5,9 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 require('dotenv').config()
 
-const usersRouter = require('./routes/auth');
+const usersRouter = require('./routes/userRoutes');
 const manageResponse = require('./routes/manageResponses')
+const rolRouter = require('./routes/rolRouter')
 
 const app = express();
 app.use(cors())
@@ -25,5 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //microservice routes
 app.use('/user', usersRouter, manageResponse);
+app.use('/rol', rolRouter, manageResponse)
 
 module.exports = app;

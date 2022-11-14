@@ -47,7 +47,6 @@ router.post('/changepassword', async function (req, res, next) {
 //delete user by id
 router.delete('/:id', async function (req, res, next) {
   req.response = await userController.deleteUser(req.params.id);
-  console.log(req.response)
   next();
 });
 
