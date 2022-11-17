@@ -8,6 +8,7 @@ require('dotenv').config()
 const usersRouter = require('./routes/userRoutes');
 const manageResponse = require('./routes/manageResponses')
 const rolRouter = require('./routes/rolRouter')
+const authRouter = require('./routes/authenticationRouter')
 
 const app = express();
 app.use(cors())
@@ -25,7 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //microservice routes
-app.use('/user', usersRouter, manageResponse);
-app.use('/rol', rolRouter, manageResponse)
+app.use('/user', usersRouter);
+app.use('/rol', rolRouter);
+app.use('/auth', authRouter)
+app.use(manageResponse)
 
 module.exports = app;

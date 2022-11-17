@@ -19,9 +19,9 @@ async function listUsers() {
 };
 
 //show user by id
-async function getUser(id) {
+async function getUser(email) {
     try {
-        const response = await userDataModel.findById(id)
+        const response = await userDataModel.findOne({email: email})
         return {
             error: false,
             data: response
@@ -74,10 +74,10 @@ async function validatePassword(data) {
     const user = new userDataModel(data)
     try {
         const valid = await user.isValidPassword(data)
-        if (valid) return true
+        
         return {
-            error: false,
-            data: response
+            error: valid.error,
+            data: valid.message
         };
     } catch (e) {
         return {

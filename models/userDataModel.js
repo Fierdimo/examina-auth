@@ -49,12 +49,27 @@ UserSchema.pre('save', async function (next) {
 // methods
 UserSchema.method('isValidPassword', async function (data) {
     try {
-        const me = await Users.findById(data.id)
-        const validPassword = await bcrypt.compare(data.password, me.password)
-        if (validPassword) return true
-        return false
-    } catch {
-        throw "error with pw validation"
+        const me = await Users.findOne({ email: data.email })
+        if (me) {
+            const validPassword = await bcrypt.compare(data.password, me.password)
+            if (validPassword) return {
+                error: false,
+                data: me
+            }
+            return {
+                error: true,
+                message: 'forbidden'
+            }
+
+        }else {
+            return {
+                error: true,
+                message: 'user not found'
+            }
+        }
+
+    } catch (e) {
+        return e
     }
 })
 

@@ -11,8 +11,8 @@ router.get('/list', async function (req, res, next) {
 });
 
 // GET user by ID
-router.get('/show/:id', async function (req, res, next) {
-  req.response = await userController.getUser(req.params.id)
+router.get('/show/:email', async function (req, res, next) {
+  req.response = await userController.getUser(req.params.email)
   next();
 });
 

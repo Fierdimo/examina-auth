@@ -86,9 +86,8 @@ async function deteleRol(requiredRol){
 //answer if an action is valid for a rol
 async function isValidAction(rol, action){
     const newRol = new rolModel()
-    console.log(action)
     try {
-        const response = await newRol.canDoThis(rol, action)
+        const response = await newRol.canDoThis(rol, action);
         return {
             error: false,
             data: response
