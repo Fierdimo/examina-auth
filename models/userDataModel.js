@@ -21,11 +21,11 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         minlength: [3, 'too short name'],
     },
-    rol: {
+    rolname: {
         type: String,
         required: [true, 'No rol'],
         enum: {
-            values: ["USER", "ADMIN", "GUEST"],
+            values: process.env.ROLES,
             message: '{VALUE} is not a valid number'
         }
     }
@@ -76,27 +76,12 @@ UserSchema.method('isValidPassword', async function (data) {
 UserSchema.method('updatePassword', async function (data) {
     const newPasswordHash = await hashPassword(data.password);
     try {
-        const response = await Users.findByIdAndUpdate(data.id, { password: newPasswordHash }, { new: true });
+        const response = await Users.findOneAndUpdate({email:data.email}, { password: newPasswordHash }, { new: true });
         return response
     } catch (e) {
         return e
     }
 })
-
-// UserSchema.method('isValidAction', async function (id, action) {
-//     const my = await Users.findById(id)
-//     const permissions = await ***permissionModel.forThisAction(action)***
-
-// ***** action examples *****
-// **** read : [USER, ADMIN, GUEST],
-// **** write: [ADMIN]
-// **** write_self: [USER]
-// **** delete: [ADMIN]
-// **** delete_self: [USER]
-
-//     if (permissions.includes(my.rol)) return true;
-//     return false
-// })
 
 const Users = mongoose.model('user', UserSchema)
 

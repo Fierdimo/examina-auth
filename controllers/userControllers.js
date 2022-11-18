@@ -21,7 +21,7 @@ async function listUsers() {
 //show user by id
 async function getUser(email) {
     try {
-        const response = await userDataModel.findOne({email: email})
+        const response = await userDataModel.findOne({ email: email })
         return {
             error: false,
             data: response
@@ -54,8 +54,10 @@ async function postUser(data) {
 
 //update user's data, except password
 async function updateUser(data) {
+    delete data.password;
+    delete data.rolname;
     try {
-        const response = await userDataModel.findByIdAndUpdate(data.id, data, { new: true, runValidators: true });
+        const response = await userDataModel.findOneAndUpdate({ email: data.email }, data, { new: true, runValidators: true });
         console.log(`updated user <${response.email}> at ${response.updatedAt}`)
         return {
             error: false,
@@ -69,12 +71,55 @@ async function updateUser(data) {
     }
 };
 
+async function upgradeUser(data) {
+    const upgrade_order = process.env.ROLES;    
+
+    try {
+        const user = await userDataModel.findOne({ email: data });
+        if(!user) throw "no user"
+        
+        let user_rol = upgrade_order.indexOf(user.rolname);    
+        
+        if (user_rol && (user_rol < (upgrade_order.length - 1))) {
+            user_rol++;
+            try {
+                const response = await userDataModel.findOneAndUpdate(
+                    { email: data},
+                    { rolname: upgrade_order(user_rol) },
+                    { new: true, runValidators: true });
+    
+                console.log(`upgraded user <${response.email}> at ${response.updatedAt}`)
+                return {
+                    error: false,
+                    data: response
+                };
+            } catch (e) {
+                return {
+                    error: true,
+                    data: e
+                };
+            }
+        }
+
+    } catch (e) {
+        return {
+            error: true,
+            data: e
+        };
+    }       
+
+    return {
+        error: true,
+        data: "Impossible"
+    };
+}
+
 //check if password is valid
 async function validatePassword(data) {
     const user = new userDataModel(data)
     try {
         const valid = await user.isValidPassword(data)
-        
+
         return {
             error: valid.error,
             data: valid.message
@@ -89,7 +134,7 @@ async function validatePassword(data) {
 
 //update password
 async function changePassword(data) {
-    const user = new userDataModel(data)
+    const user = new userDataModel()
     try {
         const response = await user.updatePassword(data)
         return {
@@ -105,10 +150,9 @@ async function changePassword(data) {
 };
 
 //delete user account
-async function deleteUser(id) {
+async function deleteUser(email) {
     try {
-        console.log('trying to delete user ' + id)
-        const response = await userDataModel.findByIdAndDelete(id)
+        const response = await userDataModel.findOneAndDelete({ email: email })
         return {
             error: false,
             data: response
@@ -122,4 +166,4 @@ async function deleteUser(id) {
 }
 
 
-module.exports = { listUsers, postUser, getUser, updateUser, validatePassword, changePassword, deleteUser }
+module.exports = { listUsers, postUser, getUser, updateUser, validatePassword, changePassword, deleteUser, upgradeUser }

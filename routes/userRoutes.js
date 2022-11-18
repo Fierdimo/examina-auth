@@ -10,7 +10,7 @@ router.get('/list', async function (req, res, next) {
   next();
 });
 
-// GET user by ID
+// GET user by email
 router.get('/show/:email', async function (req, res, next) {
   req.response = await userController.getUser(req.params.email)
   next();
@@ -22,33 +22,39 @@ router.post('/create', async function (req, res, next) {
   next();
 });
 
-//Update user's data except password
+//Update user's data except password & rol
 router.post('/update', async function (req, res, next) {
-  delete req.body.password;
-  const data = req.body;
-  req.response = await userController.updateUser(data);
+  req.response = await userController.updateUser(req.body);
   next();
 });
 
-//validate password
+// update rolname >> upgrade
+router.post('/upgrade/:email', async function (req, res, next) {  
+  req.response = await userController.upgradeUser(req.params.email);
+  next();
+});
+
+//validate password *** ???
 router.get('/validatepassword', async function (req, res, next) {
-  const data = req.body
-  req.response = await userController.validatePassword(data)
+  req.response = await userController.validatePassword(req.body)
   next()
+});
+
+//delete user by email
+router.delete('/:email', async function (req, res, next) {
+  req.response = await userController.deleteUser(req.params.email);
+  next();
 });
 
 //update password
 router.post('/changepassword', async function (req, res, next) {
-  const data = req.body
-  req.response = await userController.changePassword(data)
+  req.response = await userController.changePassword(req.body)
   next()
 });
 
-//delete user by id
-router.delete('/:id', async function (req, res, next) {
-  req.response = await userController.deleteUser(req.params.id);
-  next();
-});
+
+
+
 
 
 module.exports = router;

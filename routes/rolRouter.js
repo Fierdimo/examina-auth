@@ -34,6 +34,7 @@ router.delete('/', async function (req, res, next) {
     next();
   });
   //check if a rol can do an action
+  
   router.get('/isValidAction', async function(req, res, next){
     req.response = await rolController.isValidAction(req.body.rolname, req.body.action)
     next()
