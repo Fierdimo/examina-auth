@@ -58,13 +58,13 @@ UserSchema.method('isValidPassword', async function (data) {
             }
             return {
                 error: true,
-                message: 'forbidden'
+                message: 'Forbidden'
             }
 
         }else {
             return {
                 error: true,
-                message: 'user not found'
+                message: 'User not found'
             }
         }
 

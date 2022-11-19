@@ -4,7 +4,7 @@ const router = express.Router();
 const authenticationController = require('../controllers/authenticationController');
 const rolController = require('../controllers/rolControllers')
 
-router.get('/', async function (req, res, next) {
+router.post('/', async function (req, res, next) {
     req.response = await authenticationController.getToken(req.body)
     next();
 })

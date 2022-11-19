@@ -4,21 +4,23 @@ const userDataModel = require('../models/userDataModel')
 
 async function getToken(data) {
     const user = new userDataModel();
-    try {
-        const validUser = await user.isValidPassword(data)
-        if (!validUser.error) {
-            const code = jwt.sign({ email: validUser.data.email, rolname: validUser.data.rol }, process.env.SECRET_KEY);
-            return {
-                error: false,
-                data: { token: code }
-            }
-        } else {
-            throw "I can't accept this credentials"
-        }
-    } catch (e) {
+
+    const validUser = await user.isValidPassword(data)
+    if (!validUser.error) {
+        const code = jwt.sign({ email: validUser.data.email, rolname: validUser.data.rol }, process.env.SECRET_KEY);
         return {
-            error: true,
-            data: e
+            status: 202,
+            data: {
+                token: code,
+                message: "Get this token for a gift"
+            }
+        }
+    } else {
+        return {
+            status: 401,
+            data: {
+                message: validUser.message
+            }
         };
     }
 }
@@ -28,7 +30,7 @@ function isValidToken(token) {
     try {
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
         return {
-            error: false,
+            status: 202,
             data: {
                 pass: true,
                 email: decoded.email,
@@ -38,7 +40,7 @@ function isValidToken(token) {
     } catch (e) {
         if (JWT_ERRORS.includes(e.name)) {
             return {
-                error: false,
+                status: 406,
                 data: {
                     pass: false,
                     error: e
@@ -47,7 +49,7 @@ function isValidToken(token) {
         }
 
         return {
-            error: true,
+            status: 400,
             data: e
         };
     }

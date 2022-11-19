@@ -1,17 +1,16 @@
 
 async function manageResponse(req, res, next) {
     let status = 400;
-    let message = "hubo un error"
+    let data = { message: "Auth-app error. Revisa la dirección" }
     if (req.response) {
-        if (typeof (req.response.data) == 'object') 
+        if (typeof (req.response.data) == 'object')
             if ("password" in req.response.data) req.response.data.password = "*********";
 
-        if (!req.response.error) status = 200;
-        
-        message = req.response.data
+        status = req.response.status
+        data = req.response.data
     }
 
-    res.status(status).json(message);
+    res.status(status).json(data);
     next();
 }
 

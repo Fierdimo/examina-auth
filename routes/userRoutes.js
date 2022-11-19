@@ -52,9 +52,4 @@ router.post('/changepassword', async function (req, res, next) {
   next()
 });
 
-
-
-
-
-
 module.exports = router;
