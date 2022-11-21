@@ -49,9 +49,11 @@ rolSchema.method('updateActions', async function (rol,actions) {
 });
 
 rolSchema.method('canDoThis', async function(rol, action){
+    console.log(rol)
     try{
         const response = await roles.findOne({rolname: rol});
         if (!response) throw false
+        
         if (response.actions.includes(action)) return true;
         return false;
     }catch(e){

@@ -7,7 +7,7 @@ async function getToken(data) {
 
     const validUser = await user.isValidPassword(data)
     if (!validUser.error) {
-        const code = jwt.sign({ email: validUser.data.email, rolname: validUser.data.rol }, process.env.SECRET_KEY);
+        const code = jwt.sign({ email: validUser.data.email, rolname: validUser.data.rolname }, process.env.SECRET_KEY);
         return {
             status: 202,
             data: {

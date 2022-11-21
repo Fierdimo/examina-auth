@@ -10,8 +10,10 @@ router.post('/', async function (req, res, next) {
 })
 
 router.post('/:token', async function(req, res, next){
+    
     const response = authenticationController.isValidToken(req.params.token);
     if(!response.error){
+        console.log(response)
         const validAction = await rolController.isValidAction(response.data.rolname, req.body.action)
         
         if(!validAction.data){

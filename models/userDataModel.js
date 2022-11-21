@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'No rol'],
         enum: {
-            values: process.env.ROLES,
+            values: ["GUEST", "USER", "ADMIN"],
             message: '{VALUE} is not a valid number'
         }
     }

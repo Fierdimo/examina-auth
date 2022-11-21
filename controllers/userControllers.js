@@ -44,6 +44,7 @@ async function postUser(data) {
             data: response
         };
     } catch (e) {
+        console.log(e)
         return {
             status: 503,
             data: e.name
